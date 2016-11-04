@@ -339,6 +339,7 @@
 	$sql .= "caller_id_name, ";
 	$sql .= "caller_id_number, ";
 	$sql .= "source_number, ";
+	$sql .= "json#>>'{variables,sip_to_user}' AS sip_to_user, ";
 	$sql .= "destination_number, ";
 	$sql .= "(xml IS NOT NULL OR json IS NOT NULL) AS raw_data_exists, ";
 	if (is_array($_SESSION['cdr']['field'])) {
