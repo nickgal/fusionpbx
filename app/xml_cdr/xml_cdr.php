@@ -519,7 +519,11 @@
 				echo "		</a>";
 				echo "	</td>\n";
 			//called #
-				echo "<td valign='top' class='".$row_style[$c]."'>".urldecode($row['sip_to_user'])."</td>";
+				echo "<td valign='top' class='".$row_style[$c]."'>";
+				if ($row['direction'] == 'inbound' || $row['direction'] == 'local') {
+					echo urldecode($row['sip_to_user']);
+				}
+				echo "</td>";
 			//destination
 				echo "	<td valign='top' class='".$row_style[$c]." tr_link_void' nowrap='nowrap'>";
 				echo "		<a href=\"javascript:void(0)\" onclick=\"send_cmd('".PROJECT_PATH."/app/click_to_call/click_to_call.php?src_cid_name=".urlencode($row['destination_number'])."&src_cid_number=".urlencode($row['destination_number'])."&dest_cid_name=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_name'])."&dest_cid_number=".urlencode($_SESSION['user']['extension'][0]['outbound_caller_id_number'])."&src=".urlencode($_SESSION['user']['extension'][0]['user'])."&dest=".urlencode($row['destination_number'])."&rec=false&ringback=us-ring&auto_answer=true');\">\n";
