@@ -675,7 +675,9 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 					$sql .= "call_group = '$call_group', ";
 					$sql .= "call_screen_enabled = '$call_screen_enabled', ";
-					$sql .= "user_record = '$user_record', ";
+					if (permission_exists('extension_user_record')) {
+						$sql .= "user_record = '$user_record', ";
+					}
 					$sql .= "hold_music = '$hold_music', ";
 					$sql .= "auth_acl = '$auth_acl', ";
 					$sql .= "cidr = '$cidr', ";
@@ -771,9 +773,12 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 					}
 
 				//write the provision files
-					if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/provision')) {
-						require_once "app/provision/provision_write.php";
-						$ext = new extension;
+					if (strlen($_SESSION['provision']['path']['text']) > 0) {
+						if (is_dir($_SERVER["DOCUMENT_ROOT"].PROJECT_PATH.'/app/provision')) {
+							$prov = new provision;
+							$prov->domain_uuid = $domain_uuid;
+							$response = $prov->write();
+						}
 					}
 
 				//clear the cache
@@ -936,19 +941,21 @@ if (count($_POST) > 0 && strlen($_POST["persistformvar"]) == 0) {
 	unset($sql, $prep_statement);
 
 //get assigned users
-	$sql = "SELECT u.username, e.user_uuid FROM v_extension_users as e, v_users as u ";
-	$sql .= "where e.user_uuid = u.user_uuid  ";
-	$sql .= "and u.user_enabled = 'true' ";
-	$sql .= "and e.domain_uuid = '".$domain_uuid."' ";
-	$sql .= "and e.extension_uuid = '".$extension_uuid."' ";
-	$sql .= "order by u.username asc ";
-	$prep_statement = $db->prepare(check_sql($sql));
-	$prep_statement->execute();
-	$assigned_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
-	foreach($assigned_users as $field) {
-		$assigned_user_uuids[] = $field['user_uuid'];
+	if (is_uuid($extension_uuid)) {
+		$sql = "SELECT u.username, e.user_uuid FROM v_extension_users as e, v_users as u ";
+		$sql .= "where e.user_uuid = u.user_uuid  ";
+		$sql .= "and u.user_enabled = 'true' ";
+		$sql .= "and e.domain_uuid = '".$domain_uuid."' ";
+		$sql .= "and e.extension_uuid = '".$extension_uuid."' ";
+		$sql .= "order by u.username asc ";
+		$prep_statement = $db->prepare(check_sql($sql));
+		$prep_statement->execute();
+		$assigned_users = $prep_statement->fetchAll(PDO::FETCH_NAMED);
+		foreach($assigned_users as $field) {
+			$assigned_user_uuids[] = $field['user_uuid'];
+		}
+		unset($sql, $prep_statement);
 	}
-	unset($sql, $prep_statement);
 
 //get the users
 	$sql = "SELECT * FROM v_users ";

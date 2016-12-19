@@ -29,6 +29,13 @@ if ($domains_processed == 1) {
 
 	//define array of settings
 		$x = 0;
+		$array[$x]['default_setting_category'] = 'server';
+		$array[$x]['default_setting_subcategory'] = 'temp';
+		$array[$x]['default_setting_name'] = 'dir';
+		$array[$x]['default_setting_value'] = sys_get_temp_dir();
+		$array[$x]['default_setting_enabled'] = 'true';
+		$array[$x]['default_setting_description'] = '';
+		$x++;
 		$array[$x]['default_setting_category'] = 'domain';
 		$array[$x]['default_setting_subcategory'] = 'time_zone';
 		$array[$x]['default_setting_name'] = 'name';
@@ -54,7 +61,7 @@ if ($domains_processed == 1) {
 		$array[$x]['default_setting_subcategory'] = 'paging';
 		$array[$x]['default_setting_name'] = 'numeric';
 		$array[$x]['default_setting_value'] = '100';
-		$array[$x]['default_setting_enabled'] = 'false';
+		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'Set the maximum number of records displayed per page. (Default: 50)';
 		$x++;
 		$array[$x]['default_setting_category'] = 'security';
@@ -171,7 +178,7 @@ if ($domains_processed == 1) {
 		$x++;
 		$array[$x]['default_setting_category'] = 'email';
 		$array[$x]['default_setting_subcategory'] = 'smtp_validate_certificate';
-		$array[$x]['default_setting_name'] = 'bolean';
+		$array[$x]['default_setting_name'] = 'boolean';
 		$array[$x]['default_setting_value'] = 'true';
 		$array[$x]['default_setting_enabled'] = 'true';
 		$array[$x]['default_setting_description'] = 'set to false to ignore SSL certificate warnings e.g. for self-signed certificates';
